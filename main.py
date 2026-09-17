@@ -1,6 +1,10 @@
 import json
 expenses_list = []
 
+with open("expenses.json", "r") as file:
+    expenses_list = json.load(file)
+
+
 def add_expense():
     amount = ""
     # STEPHEN: Logic to validate the amount input is always a float
@@ -24,6 +28,8 @@ def add_expense():
     expenses_list.append(expense)
     # Ask the user if they want to add another expense
     move_on = input("Do you want to add another expense? (yes/no): ").lower()
+    with open("expenses.json", "w") as file:
+        json.dump(expenses_list, file, indent=4)
 
 # Loop to allow the user to add multiple expenses
     while move_on == "yes":
@@ -38,11 +44,15 @@ def add_expense():
         }
         move_on = input("Do you want to add another expense? (yes/no): ").lower()
         expenses_list.append(new_expense)
+        with open("expenses.json", "w") as file:
+                    json.dump(expenses_list, file, indent=4)
 #
 def view_expenses():
 # Print all the expenses in the list
     for expense in expenses_list:
-        print(expense)
+        print(f"Amount: {expense['amount']}")
+        print(f"Category: {expense['category']}")
+        print(f"Description: {expense['description']} ")
 def total_expenses():
 # Calculate the total amount spent and the total amount
     total_amount = sum(expense["amount"] for expense in expenses_list)
@@ -104,6 +114,3 @@ while True:
     else:
         print("Invalid choice. Please select a valid option (1-6).")
 
-
-with open("expenses.txt", "w") as file:
-    json.dump(expenses_list, file)
