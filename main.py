@@ -1,7 +1,16 @@
+import json
 expenses_list = []
 
 def add_expense():
-    amount = float(input("Enter the amount spent: "))
+    amount = ""
+    # STEPHEN: Logic to validate the amount input is always a float
+    while type(amount) != float: # Stephen: This loop will always runs until the user input a valid amount that was converted to float
+        try:
+            amount = float(input("Enter the amount spent: ")) # STEPHEN: Convert the input to a float.
+        except ValueError: # Stephen: If the float conversion fails and returns a ValueError.
+            amount = input("Invalid input. Please enter a valid number for the amount spent: ") # Stephen: Ask the user for another value. And start again.
+
+    
     category = input("Enter the category of the expense: ")
     description = input("Enter a description for the expense: ")
 
@@ -14,8 +23,8 @@ def add_expense():
     
     expenses_list.append(expense)
     # Ask the user if they want to add another expense
-    move_on = input("Do you want to add another expense? (yes/no): ")
-  
+    move_on = input("Do you want to add another expense? (yes/no): ").lower()
+
 # Loop to allow the user to add multiple expenses
     while move_on == "yes":
         amount = float(input("Enter the amount spent: "))
@@ -27,11 +36,9 @@ def add_expense():
             "category": category,
             "description": description
         }
-        move_on = input("Do you want to add another expense? (yes/no): ")
+        move_on = input("Do you want to add another expense? (yes/no): ").lower()
         expenses_list.append(new_expense)
-# Print all the expenses entered by the user
-        for expense in expenses_list:
-            print(expense)
+#
 def view_expenses():
 # Print all the expenses in the list
     for expense in expenses_list:
@@ -56,47 +63,17 @@ def total_expenses_by_category():
         print(f"{category}: {total}")
 def delete_expense():
 # delete an expense from the list
-    delete_expense = input("Do you want to delete an expense? (yes/no): ")
-    if delete_expense == "yes":
-        expense_index = int(input("Enter the index of the expense to delete (starting from 0): "))
-        if 0 <= expense_index < len(expenses_list):
-            deleted_expense = expenses_list.pop(expense_index)
+    for index, expense in enumerate(expenses_list, start=1):
+        print(f"{index}: {expense}")
+    expense_index = int(input("Enter the index of the expense to delete (starting from 1): "))
+    if 1 <= expense_index <= len(expenses_list):
+            deleted_expense = expenses_list.pop(expense_index - 1)
             print(f"Deleted expense: {deleted_expense}")
-        else:
-            print("Invalid index. No expense deleted.")
+    else:
+        print("Invalid index. No expense deleted.")
 
-
-print("==== Welcome to the Expense Tracker! ====")
-print("1. Add an expense")
-print("2. View all expenses")
-print("3. View total amount spent")
-print("4. View total amount spent by category")
-print("5. Delete an expense")
-print("6. Exit")
-
-user_choice = int(input("Please select an option (1-6): "))
-allowed_choices = [1, 2, 3, 4, 5, 6]
-if user_choice == 1:
-    print("You selected: Add an expense")
-    add_expense()
-elif user_choice == 2:
-    print("You selected: View all expenses")
-    view_expenses()
-elif user_choice == 3:
-    print("You selected: View total amount spent")
-    total_expenses()
-elif user_choice == 4:
-        print("You selected: View total amount spent by category")
-        total_expenses_by_category()
-elif user_choice == 5:
-    print("You selected: Delete an expense")
-    delete_expense()
-if user_choice == 6:
-    print("Exiting the program. Goodbye!")
-    exit()
-
-while user_choice not in allowed_choices:
-    print("Invalid choice. Please select a valid option (1-6).")
+while True:
+    print("==== Welcome to the Expense Tracker! ====")
     print("1. Add an expense")
     print("2. View all expenses")
     print("3. View total amount spent")
@@ -105,7 +82,7 @@ while user_choice not in allowed_choices:
     print("6. Exit")
 
     user_choice = int(input("Please select an option (1-6): "))
-    allowed_choices = [1, 2, 3, 4, 5, 6]
+
     if user_choice == 1:
         print("You selected: Add an expense")
         add_expense()
@@ -121,6 +98,12 @@ while user_choice not in allowed_choices:
     elif user_choice == 5:
         print("You selected: Delete an expense")
         delete_expense()
-    if user_choice == 6:
+    elif user_choice == 6:
         print("Exiting the program. Goodbye!")
-        exit()
+        break
+    else:
+        print("Invalid choice. Please select a valid option (1-6).")
+
+
+with open("expenses.txt", "w") as file:
+    json.dump(expenses_list, file)
