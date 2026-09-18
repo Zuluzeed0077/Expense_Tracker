@@ -4,17 +4,14 @@ expenses_list = []
 with open("expenses.json", "r") as file:
     expenses_list = json.load(file)
 
-
 def add_expense():
-    amount = ""
-    # STEPHEN: Logic to validate the amount input is always a float
-    while type(amount) != float: # Stephen: This loop will always runs until the user input a valid amount that was converted to float
+    amount = input("Enter the amount spent: ").strip()
+    while type(amount) != float:
         try:
-            amount = float(input("Enter the amount spent: ")) # STEPHEN: Convert the input to a float.
-        except ValueError: # Stephen: If the float conversion fails and returns a ValueError.
-            amount = input("Invalid input. Please enter a valid number for the amount spent: ") # Stephen: Ask the user for another value. And start again.
+            amount = float(amount)
+        except ValueError:
+            amount = input("Invalid input. Please enter a valid number for the amount spent: ")
 
-    
     category = input("Enter the category of the expense: ")
     description = input("Enter a description for the expense: ")
 
@@ -27,7 +24,7 @@ def add_expense():
     
     expenses_list.append(expense)
     # Ask the user if they want to add another expense
-    move_on = input("Do you want to add another expense? (yes/no): ").lower()
+    move_on = input("Do you want to add another expense? (yes/no): \n").lower()
     with open("expenses.json", "w") as file:
         json.dump(expenses_list, file, indent=4)
 
@@ -42,21 +39,23 @@ def add_expense():
             "category": category,
             "description": description
         }
-        move_on = input("Do you want to add another expense? (yes/no): ").lower()
+        move_on = input("Do you want to add another expense? (yes/no): \n").lower()
         expenses_list.append(new_expense)
         with open("expenses.json", "w") as file:
                     json.dump(expenses_list, file, indent=4)
 #
 def view_expenses():
 # Print all the expenses in the list
-    for expense in expenses_list:
-        print(f"Amount: {expense['amount']}")
+    for index, expense in enumerate(expenses_list, start=1):
+        print(f"Expense #{index}")
+        print(f"Amount: ₦{expense['amount']}")
         print(f"Category: {expense['category']}")
-        print(f"Description: {expense['description']} ")
+        print(f"Description: {expense['description']}\n")
+
 def total_expenses():
 # Calculate the total amount spent and the total amount
     total_amount = sum(expense["amount"] for expense in expenses_list)
-    print(f"Total amount spent: {total_amount}")
+    print(f"Total amoun344t spent: {total_amount}\n")
 
 def total_expenses_by_category():
 # Calculate the total amount spent in each category
@@ -70,34 +69,25 @@ def total_expenses_by_category():
             category_totals[category] = amount
         
     for category, total in category_totals.items():
-        print(f"{category}: {total}")
+        print(f"{category}: {total}\n")
 def delete_expense():
 # delete an expense from the list
-    # for index, expense in enumerate(expenses_list, start=1):
-    #     print(f"{index}: {expense}")
-    # expense_index = int(input("Enter the index of the expense to delete (starting from 1): "))
-    # if 1 <= expense_index <= len(expenses_list):
-    #         deleted_expense = expenses_list.pop(expense_index - 1)
-    # with open("expenses.json", "w") as file:
-    #                 json.dump(expenses_list, file, indent=4)
-    #         print(f"Deleted expense: {deleted_expense}")
-    # else:
-    #     print("Invalid index. No expense deleted.")
-
     for index, expense in enumerate(expenses_list, start=1):
-        print(f"{index}: {expense}")
-
-        expense_index = int(input("Enter the index of the expense to delete (starting from 1): "))
-        if 1 <= expense_index <= len(expenses_list):
+        print(f"Expense #{index}")
+        print(f"Amount: ₦{expense['amount']}")
+        print(f"Category: {expense['category']}")
+        print(f"Description: {expense['description']}\n")
+        
+    expense_index = int(input("Enter the index of the expense to delete (starting from 1), (0 for back): "))
+    if 1 <= expense_index <= len(expenses_list):
             deleted_expense = expenses_list.pop(expense_index - 1)
-    
-         # Save the updated list back to the JSON file
             with open("expenses.json", "w") as file:
                 json.dump(expenses_list, file, indent=4)
-        
-            print(f"Deleted expense: {deleted_expense}")
-        else:
-            print("Invalid index. No expense deleted.")
+                print(f"Deleted expense: {deleted_expense}")
+    elif expense_index == 0:
+        print("Back to menu")
+    else:
+        print("Invalid index. No expense deleted.\n")
 
 while True:
     print("==== Welcome to the Expense Tracker! ====")
@@ -106,9 +96,15 @@ while True:
     print("3. View total amount spent")
     print("4. View total amount spent by category")
     print("5. Delete an expense")
-    print("6. Exit")
+    print("6. Exit\n")
 
-    user_choice = int(input("Please select an option (1-6): "))
+    user_choice = input("Please select an option (1-6): ")
+    while type(user_choice) != int:
+        try:
+            user_choice = int(user_choice)
+        except ValueError:
+            user_choice = input("Invalid input. Please enter a valid number: ")
+
 
     if user_choice == 1:
         print("You selected: Add an expense")
@@ -130,6 +126,3 @@ while True:
         break
     else:
         print("Invalid choice. Please select a valid option (1-6).")
-
-with open("expenses.json", "w") as file:
-    expenses_list = json.pop(file)
