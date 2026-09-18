@@ -73,14 +73,31 @@ def total_expenses_by_category():
         print(f"{category}: {total}")
 def delete_expense():
 # delete an expense from the list
+    # for index, expense in enumerate(expenses_list, start=1):
+    #     print(f"{index}: {expense}")
+    # expense_index = int(input("Enter the index of the expense to delete (starting from 1): "))
+    # if 1 <= expense_index <= len(expenses_list):
+    #         deleted_expense = expenses_list.pop(expense_index - 1)
+    # with open("expenses.json", "w") as file:
+    #                 json.dump(expenses_list, file, indent=4)
+    #         print(f"Deleted expense: {deleted_expense}")
+    # else:
+    #     print("Invalid index. No expense deleted.")
+
     for index, expense in enumerate(expenses_list, start=1):
         print(f"{index}: {expense}")
-    expense_index = int(input("Enter the index of the expense to delete (starting from 1): "))
-    if 1 <= expense_index <= len(expenses_list):
+
+        expense_index = int(input("Enter the index of the expense to delete (starting from 1): "))
+        if 1 <= expense_index <= len(expenses_list):
             deleted_expense = expenses_list.pop(expense_index - 1)
+    
+         # Save the updated list back to the JSON file
+            with open("expenses.json", "w") as file:
+                json.dump(expenses_list, file, indent=4)
+        
             print(f"Deleted expense: {deleted_expense}")
-    else:
-        print("Invalid index. No expense deleted.")
+        else:
+            print("Invalid index. No expense deleted.")
 
 while True:
     print("==== Welcome to the Expense Tracker! ====")
@@ -114,3 +131,5 @@ while True:
     else:
         print("Invalid choice. Please select a valid option (1-6).")
 
+with open("expenses.json", "w") as file:
+    expenses_list = json.pop(file)
