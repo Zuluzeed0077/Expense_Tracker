@@ -3,6 +3,7 @@ expenses_list = []
 
 with open("expenses.json", "r") as file:
     expenses_list = json.load(file)
+def get_expense():
 
 def add_expense():
     amount = input("Enter the amount spent: ").strip()
@@ -12,8 +13,15 @@ def add_expense():
         except ValueError:
             amount = input("Invalid input. Please enter a valid number for the amount spent: ")
 
-    category = input("Enter the category of the expense: ")
-    description = input("Enter a description for the expense: ")
+    category = input("Enter the category of the expense: ").strip()
+    while category is "":
+        print("invalid input")
+        category = input("Enter the category of the expense: ").strip()
+    description = input("Enter a description for the expense: ").strip()
+    while description is "":
+        print("invalid input")
+        description = input("Enter a description for the expense: ").strip()
+
 
     # Create a dictionary to store the expense details
     expense = {   
@@ -24,15 +32,23 @@ def add_expense():
     
     expenses_list.append(expense)
     # Ask the user if they want to add another expense
-    move_on = input("Do you want to add another expense? (yes/no): \n").lower()
+    move_on = input("Do you want to add another expense? (yes/no): \n").lower().strip()
     with open("expenses.json", "w") as file:
         json.dump(expenses_list, file, indent=4)
 
 # Loop to allow the user to add multiple expenses
     while move_on == "yes":
         amount = float(input("Enter the amount spent: "))
-        category = input("Enter the category of the expense: ")
-        description = input("Enter a description for the expense: ")
+        
+        category = input("Enter the category of the expense: ").strip()
+        while category is "":
+            print("invalid input")
+            category = input("Enter the category of the expense: ").strip()
+            
+        description = input("Enter a description for the expense: ").strip()
+    while description is "":
+        print("invalid input")
+        description = input("Enter a description for the expense: ").strip()
 
         new_expense = {
             "amount": amount,
@@ -55,7 +71,7 @@ def view_expenses():
 def total_expenses():
 # Calculate the total amount spent and the total amount
     total_amount = sum(expense["amount"] for expense in expenses_list)
-    print(f"Total amoun344t spent: {total_amount}\n")
+    print(f"Total amount spent: {total_amount}\n")
 
 def total_expenses_by_category():
 # Calculate the total amount spent in each category
