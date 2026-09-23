@@ -3,8 +3,8 @@ expenses_list = []
 
 with open("expenses.json", "r") as file:
     expenses_list = json.load(file)
-    
-def get_expense():
+
+def add_expense():
     amount = input("Enter the amount spent: ").strip()
     while type(amount) != float:
         try:
@@ -12,15 +12,8 @@ def get_expense():
         except ValueError:
             amount = input("Invalid input. Please enter a valid number for the amount spent: ")
 
-    category = input("Enter the category of the expense: ").strip()
-    while category == "" :
-        print("invalid input")
-        category = input("Enter the category of the expense: ").strip()
-
-    description = input("Enter the description of the expense: ").strip()
-    while description == "" :
-        print("invalid input")
-        description = input("Enter the description of the expense: ").strip()
+    category = input("Enter the category of the expense: ")
+    description = input("Enter a description for the expense: ")
 
     # Create a dictionary to store the expense details
     expense = {   
@@ -41,7 +34,15 @@ def add_expense():
 
 # Loop to allow the user to add multiple expenses
     while move_on == "yes":
-        get_expense()
+        amount = float(input("Enter the amount spent: "))
+        category = input("Enter the category of the expense: ")
+        description = input("Enter a description for the expense: ")
+
+        new_expense = {
+            "amount": amount,
+            "category": category,
+            "description": description
+        }
         move_on = input("Do you want to add another expense? (yes/no): \n").lower()
         with open("expenses.json", "w") as file:
                     json.dump(expenses_list, file, indent=4)
