@@ -3,8 +3,8 @@ expenses_list = []
 
 with open("expenses.json", "r") as file:
     expenses_list = json.load(file)
-
-def add_expense():
+    
+def get_expense():
     amount = input("Enter the amount spent: ").strip()
     while type(amount) != float:
         try:
@@ -12,8 +12,15 @@ def add_expense():
         except ValueError:
             amount = input("Invalid input. Please enter a valid number for the amount spent: ")
 
-    category = input("Enter the category of the expense: ")
-    description = input("Enter a description for the expense: ")
+    category = input("Enter the category of the expense: ").strip()
+    while category == "" :
+        print("invalid input")
+        category = input("Enter the category of the expense: ").strip()
+
+    description = input("Enter the description of the expense: ").strip()
+    while description == "" :
+        print("invalid input")
+        description = input("Enter the description of the expense: ").strip()
 
     # Create a dictionary to store the expense details
     expense = {   
@@ -23,24 +30,19 @@ def add_expense():
         }
     
     expenses_list.append(expense)
+
+def add_expense():
+    get_expense()
+
     # Ask the user if they want to add another expense
-    move_on = input("Do you want to add another expense? (yes/no): \n").lower()
+    move_on = input("Do you want to add another expense? (yes/no): \n").lower().strip()
     with open("expenses.json", "w") as file:
         json.dump(expenses_list, file, indent=4)
 
 # Loop to allow the user to add multiple expenses
     while move_on == "yes":
-        amount = float(input("Enter the amount spent: "))
-        category = input("Enter the category of the expense: ")
-        description = input("Enter a description for the expense: ")
-
-        new_expense = {
-            "amount": amount,
-            "category": category,
-            "description": description
-        }
+        get_expense()
         move_on = input("Do you want to add another expense? (yes/no): \n").lower()
-        expenses_list.append(new_expense)
         with open("expenses.json", "w") as file:
                     json.dump(expenses_list, file, indent=4)
 #
@@ -50,12 +52,12 @@ def view_expenses():
         print(f"Expense #{index}")
         print(f"Amount: ₦{expense['amount']}")
         print(f"Category: {expense['category']}")
-        print(f"Description: {expense['description']}\n")
+        print(f"Description: {expense['description']}")
 
 def total_expenses():
 # Calculate the total amount spent and the total amount
     total_amount = sum(expense["amount"] for expense in expenses_list)
-    print(f"Total amoun344t spent: {total_amount}\n")
+    print(f"Total amount spent: {total_amount}\n")
 
 def total_expenses_by_category():
 # Calculate the total amount spent in each category
@@ -78,7 +80,13 @@ def delete_expense():
         print(f"Category: {expense['category']}")
         print(f"Description: {expense['description']}\n")
         
-    expense_index = int(input("Enter the index of the expense to delete (starting from 1), (0 for back): "))
+    expense_index = (input("Enter the index of the expense to delete (starting from 1), (0 for back): "))
+    while type(expense_index) != int:
+        try:
+            expense_index = int(expense_index)
+        except ValueError:
+            expense_index = input("Invalid input. Please enter a valid number: ")
+    
     if 1 <= expense_index <= len(expenses_list):
             deleted_expense = expenses_list.pop(expense_index - 1)
             with open("expenses.json", "w") as file:
@@ -90,7 +98,6 @@ def delete_expense():
         print("Invalid index. No expense deleted.\n")
 
 while True:
-    print("==== Welcome to the Expense Tracker! ====")
     print("1. Add an expense")
     print("2. View all expenses")
     print("3. View total amount spent")
@@ -98,7 +105,7 @@ while True:
     print("5. Delete an expense")
     print("6. Exit\n")
 
-    user_choice = input("Please select an option (1-6): ")
+    user_choice = input("Please select an option (1-6): \n")
     while type(user_choice) != int:
         try:
             user_choice = int(user_choice)
@@ -107,22 +114,18 @@ while True:
 
 
     if user_choice == 1:
-        print("You selected: Add an expense")
         add_expense()
     elif user_choice == 2:
-        print("You selected: View all expenses")
         view_expenses()
     elif user_choice == 3:
-        print("You selected: View total amount spent")
+
         total_expenses()
     elif user_choice == 4:
-        print("You selected: View total amount spent by category")
         total_expenses_by_category()
     elif user_choice == 5:
-        print("You selected: Delete an expense")
         delete_expense()
     elif user_choice == 6:
         print("Exiting the program. Goodbye!")
         break
     else:
-        print("Invalid choice. Please select a valid option (1-6).")
+        print("Invalid choice. Please select a valid option (1-6). \n")
